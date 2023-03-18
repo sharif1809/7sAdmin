@@ -1,0 +1,15 @@
+.c-card-title-group{
+	 display: inline-block !important;
+	 margin-right: 20px;
+}
+.c-card-amount{display: inline-block !important; height: 12px;}
+.c-card-amount .amount{color: #6576ff !important;}
+.invest-data-history .title{
+ display: inline-block !important;
+    padding: 5px;
+    color: white !important;
+    border-radius: 5px;
+    line-height: 11px;
+	text-transform: capitalize !important;
+	background: #6576ff !important;
+	}

@@ -1,0 +1,75 @@
+
+  [
+    {
+      "title" : "manage country",
+      "icon" : "country",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    },
+    {  
+      "title" : "manage category",
+      "icon" : "category",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    },
+    {
+      "title" : "campaigns list",
+      "icon" : "campaigns",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    },
+    {
+      "title" : "manage notification",
+      "icon" : "notification",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    },
+    {
+      "title" : "manage block ip",
+      "icon" : "notification",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    },
+    {
+      "title" : "manage coupon",
+      "icon" : "coupon",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    },
+    {
+      "title" : "payment report",
+      "icon" : "payment",
+      "status" : true,
+      "action" : {
+        "add" : true,
+        "edit" :false,
+        "delete" :false
+      }
+    }
+   
+    
+  ] 
