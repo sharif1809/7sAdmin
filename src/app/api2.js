@@ -65,10 +65,10 @@ const updateAdRate = async (data) => {
 
 // Manage Website
 
-const websiteList = async (category_id, status, pg, lim) => {
+const websiteList = async (website_category, website_status, pg, lim) => {
   const res = await api.post("/admin/pub/website/list", {
-    category_id:category_id,
-    status:status,
+    website_category:website_category,
+    website_status:website_status,
     page: pg,
     lim: lim,
   });

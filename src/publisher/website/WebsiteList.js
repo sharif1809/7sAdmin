@@ -476,7 +476,7 @@ const getWebsiteList = () => {
                             </DataTableRow>
 
                             <DataTableRow size="lg">
-                              <span className={`badge badge-dim badge-dark`}>{item.adunites}</span>
+                              <span className={`badge badge-dim badge-dark`}>{(item.adunites < 1 ? item.adunites : '0')  }</span>
                             </DataTableRow>
                             <DataTableRow size="md">
                               {item.website_status === 0 && (
