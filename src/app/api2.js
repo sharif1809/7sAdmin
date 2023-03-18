@@ -2,8 +2,8 @@ import { create } from "apisauce";
 const auth_token = localStorage.getItem("accessToken");
 const api = create({
   // baseURL: "http://192.168.1.14/7sapp/7searchBackend/public/api/",
-  baseURL: "http://192.168.1.4/7SearchServices/public/api/",
-  // baseURL: 'https://services.7searchppc.in/api/',
+  // baseURL: "http://192.168.1.4/7SearchServices/public/api/",
+  baseURL: 'https://services.7searchppc.in/api/',
   // baseURL: 'https://services.7searchppc.com/api/',
   headers: {
     "X-API-KEY": "580eca75d1ffbacca33edc3278c092e9",
