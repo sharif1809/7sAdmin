@@ -200,6 +200,11 @@ const menu = [
     link: "/website-list",
   },
   {
+    icon: "globe",
+    text: "AdUnit List",
+    link: "/adunit-list",
+  },
+  {
     heading: "Others",
   },
   {

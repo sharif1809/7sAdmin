@@ -32,11 +32,11 @@ import {
   Form,
   FormGroup,
 } from "reactstrap";
-import { getCmpListCategoryList, countryDropListUser } from "../../app/api";
+import { getCmpListCategoryList } from "../../app/api";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../../app/Loader";
-import { adRateStore, updateAdRate, websiteList } from "../../app/api2";
+import { adRateStore, websiteList, websiteReject, websiteStatusUpdate } from "../../app/api2";
 import { useForm } from "react-hook-form";
 
 const getWebsiteList = () => {
@@ -73,22 +73,19 @@ const getWebsiteList = () => {
 
   const [cat, setCat] = useState(null);
   const [catName, setCatName] = useState(null);
-  const [con, setCon] = useState(null);
-  const [conName, setConName] = useState(null);
   const [errorList, setError] = useState([]);
+  const [webId, setWebId] = useState(0);
   const [formData, setFormData] = useState({
-    category_id: "",
-    country_id: "",
-    cpm: "",
-    cpc: "",
+    remark: "",
+    status: 6,
+    id: "",
     errorList: [],
   });
   const resetForm = () => {
     setFormData({
-      category_id: "",
-      country_id: "",
-      cpm: "",
-      cpc: "",
+      remark: "",
+      status: 6,
+      id: "",
       errorList: [],
     });
   };
@@ -98,18 +95,10 @@ const getWebsiteList = () => {
     // console.log(res);
     setCategory(res);
   };
-  const [ucountry, setUcountry] = useState(null);
-  const getCountryData = async () => {
-    const res = await countryDropListUser();
-    // console.log(res.data)
-    setUcountry(res.data);
-  };
-  const [editAdRate, setAdRate] = useState("");
-  const [editAdRateId, setAdRateId] = useState(0);
-
-  const getWebsiteList = async (cat, status, pg = 1) => {
+  
+  const getWebsiteList = async (cat, status, pg = 1, src = "") => {
     setLoading(true);
-    const res = await websiteList(cat, status, pg, itemPerPage);
+    const res = await websiteList(cat, status, pg, itemPerPage, src);
     // console.log(res.data);
     if (res.data) {
       // console.log(res.data);
@@ -120,6 +109,18 @@ const getWebsiteList = () => {
       setPgs("");
     }
     setLoading(false);
+  };
+
+  const updateWebsite = async (id, sts) => {
+    setLoading(true);
+    const res = await websiteStatusUpdate(id, sts);
+    if (res.code === 200) {
+      getWebsiteList();
+    }
+    setLoading(false);
+  };
+  const onFilterChange = (val) => {
+    getWebsiteList("", "", "", val);
   };
   const [modal, setModal] = useState(false);
   const reload = () => window.location.reload();
@@ -139,32 +140,8 @@ const getWebsiteList = () => {
   const onFormSubmit = async () => {
     // console.log(formData);
     setLoading(true);
-    if (editAdRateId > 0) {
-      const res = await updateAdRate(formData);
-      if (res.code === 200) {
-        toast.success(" Updated Successfully", {
-          position: "top-right",
-          autoClose: true,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: false,
-        });
-        getWebsiteList();
-      } else {
-        toast.error("Something went wrong!", {
-          position: "top-right",
-          autoClose: true,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: false,
-        });
-      }
-    } else {
-      const res = await adRateStore(formData);
+    
+      const res = await websiteReject(formData);
       // console.log(res);
       if (res.code === 200) {
         toast.success("Rate Added Successfully", {
@@ -195,7 +172,7 @@ const getWebsiteList = () => {
           progress: false,
         });
       }
-    }
+    
 
     getWebsiteList();
     setLoading(false);
@@ -206,13 +183,13 @@ const getWebsiteList = () => {
     setCurrentPage(pageNumber);
     if (currentPage !== pageNumber) {
       let std = getUserStatus();
-      getWebsiteList(cat, std, con, pageNumber);
+      getWebsiteList(cat, std, pageNumber);
     }
   };
   useEffect(() => {
     getWebsiteList();
     getCategory();
-    getCountryData();
+   
   }, []);
   const { errors, register, handleSubmit } = useForm();
 
@@ -249,7 +226,7 @@ const getWebsiteList = () => {
                           type="text"
                           className="form-control"
                           id="default-04"
-                          placeholder="Search Website, User ID & Email ID, Status, Category"
+                          placeholder="Search Website, User ID & Email ID, Category"
                           onChange={(e) => {
                             onFilterChange(e.target.value);
                           }}
@@ -410,12 +387,7 @@ const getWebsiteList = () => {
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </li>
-                    <li className="nk-block-tools-opt" onClick={() => setModal({ add: true })}>
-                      <Button color="primary">
-                        <Icon name="plus"></Icon>
-                        <span>Add Rates</span>
-                      </Button>
-                    </li>
+                    
                   </ul>
                 </div>
               </div>
@@ -476,7 +448,7 @@ const getWebsiteList = () => {
                             </DataTableRow>
 
                             <DataTableRow size="lg">
-                              <span className={`badge badge-dim badge-dark`}>{(item.adunites < 1 ? item.adunites : '0')  }</span>
+                              <span className={`badge badge-dim badge-dark`}>{item.adunites}</span>
                             </DataTableRow>
                             <DataTableRow size="md">
                               {item.website_status === 0 && (
@@ -534,18 +506,18 @@ const getWebsiteList = () => {
                                     <DropdownMenu right>
                                       <ul className="link-list-opt no-bdr">
                                         <li>
-                                          {item.website_status === 2 ? (
+                                          {item.website_status === 4 ? (
                                             <li>
                                               <DropdownItem
                                                 tag="a"
                                                 href="#markasdone"
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  // updateCamp(item.campaign_id, 0);
+                                                  updateWebsite(item.id, 1);
                                                 }}
                                               >
                                                 <Icon name="icon ni ni-property-remove"></Icon>
-                                                <span>Incomplete</span>
+                                                <span>Unverified</span>
                                               </DropdownItem>
 
                                               <DropdownItem
@@ -553,11 +525,11 @@ const getWebsiteList = () => {
                                                 href="#markasdone"
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  // updateCamp(item.campaign_id, 1);
+                                                  updateWebsite(item.id, 3);
                                                 }}
                                               >
                                                 <Icon name="icon ni ni-eye"></Icon>
-                                                <span>Inreview</span>
+                                                <span>Hold</span>
                                               </DropdownItem>
 
                                               <DropdownItem
@@ -565,70 +537,30 @@ const getWebsiteList = () => {
                                                 href="#markasdone"
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  // updateCamp(item.campaign_id, 4);
+                                                  updateWebsite(item.id, 5);
                                                 }}
                                               >
                                                 <Icon name="pause"></Icon>
-                                                <span>Paused</span>
+                                                <span>Suspend</span>
                                               </DropdownItem>
                                               <DropdownItem
                                                 tag="a"
                                                 href="#markasdone"
+                                                // onClick={(ev) => {
+                                                //   ev.preventDefault();
+                                                //   // updateWebsite(item.id, 6);
+                                                // }}
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  // updateCamp(item.campaign_id, 5);
+                                                  setFormData({ ...formData, id: item.id });
+                                                  console.log(formData)
+                                                  setModal({ add: true });
                                                 }}
                                               >
                                                 <Icon name="icon ni ni-alert-circle-fill"></Icon>
-                                                <span>Hold</span>
+                                                <span>Reject</span>
                                               </DropdownItem>
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  // updateCamp(item.campaign_id, 6);
-                                                }}
-                                              >
-                                                <Icon name="icon ni ni-na"></Icon>
-                                                <span>Suspend</span>
-                                              </DropdownItem>
-                                            </li>
-                                          ) : item.status === 1 ? (
-                                            <li>
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  updateCamp(item.campaign_id, 2);
-                                                }}
-                                              >
-                                                <Icon name="play"></Icon>
-                                                <span>Active</span>
-                                              </DropdownItem>
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  updateCamp(item.campaign_id, 5);
-                                                }}
-                                              >
-                                                <Icon name="icon ni ni-alert-circle-fill"></Icon>
-                                                <span>Hold</span>
-                                              </DropdownItem>
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  updateCamp(item.campaign_id, 6);
-                                                }}
-                                              >
-                                                <Icon name="icon ni ni-na"></Icon>
-                                                <span>Suspend</span>
-                                              </DropdownItem>
+                                              
                                             </li>
                                           ) : (
                                             <li>
@@ -637,11 +569,11 @@ const getWebsiteList = () => {
                                                 href="#markasdone"
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  updateCamp(item.campaign_id, 2);
+                                                  updateWebsite(item.id, 4);
                                                 }}
                                               >
                                                 <Icon name="play"></Icon>
-                                                <span>Active</span>
+                                                <span>Approve</span>
                                               </DropdownItem>
                                             </li>
                                           )}
@@ -690,95 +622,32 @@ const getWebsiteList = () => {
               <Icon name="cross-sm"></Icon>
             </a>
             <div className="p-2">
-              <h5 className="title">{editAdRateId > 0 ? "Update" : "Add"} Rate</h5>
+              <h5 className="title">Add Remark for Rejection</h5>
               <div className="mt-4">
                 <Form className="row gy-4" onSubmit={handleSubmit(onFormSubmit)}>
-                  {editAdRateId < 1 ? (
-                    <Col md="12">
-                      <FormGroup className="form-group">
-                        <label className="form-label" htmlFor="category_id">
-                          {" "}
-                          Website Category *{" "}
-                        </label>
-                        <div className="form-control-wrap">
-                          <RSelect
-                            options={categlist}
-                            name="category_id"
-                            defaultValue={editAdRate.category_id}
-                            onChange={(e) => {
-                              // console.log(e.value)
-                              setFormData({ ...formData, category_id: e.value });
-                            }}
-                            ref={register({})}
-                          />
-                          <span className="text-danger">{errorList.category_id}</span>
-                        </div>
-                      </FormGroup>
-                    </Col>
-                  ) : (
-                    ""
-                  )}
-                  {editAdRateId < 1 ? (
-                    <Col lg="12">
-                      <FormGroup className="form-group">
-                        <label className="form-label" htmlFor="country_id">
-                          {" "}
-                          Country *{" "}
-                        </label>
-                        <div className="form-control-wrap">
-                          <RSelect
-                            options={ucountry}
-                            name="country_id"
-                            defaultValue={editAdRate.country_id}
-                            onChange={(e) => {
-                              // console.log(editAdRate.country_id);
-                              setFormData({ ...formData, country_id: e.value });
-                            }}
-                            ref={register({})}
-                          />
-                          <span className="text-danger">{errorList.country_id}</span>
-                        </div>
-                      </FormGroup>
-                    </Col>
-                  ) : (
-                    ""
-                  )}
+                  
+                   
                   <Col md="12">
                     <FormGroup>
-                      <label className="form-label">Cpm</label>
+                      <label className="form-label">Remark</label>
                       <input
                         type="text"
-                        name="cpm"
-                        defaultValue={editAdRate.cpm}
-                        placeholder="Enter Cpm value"
-                        onChange={(e) => setFormData({ ...formData, cpm: e.target.value })}
+                        name="remark"
+                        placeholder="Enter Remark"
+                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
                         className="form-control"
                         ref={register({})}
                       />
-                      <span className="text-danger">{errorList.cpm}</span>
+                      <span className="text-danger">{errorList.remark}</span>
                     </FormGroup>
                   </Col>
-                  <Col md="12">
-                    <FormGroup>
-                      <label className="form-label">Cpc</label>
-                      <input
-                        type="text"
-                        name="cpc"
-                        defaultValue={editAdRate.cpc}
-                        placeholder="Enter Cpc value"
-                        onChange={(e) => setFormData({ ...formData, cpc: e.target.value })}
-                        className="form-control"
-                        ref={register({})}
-                      />
-                      <span className="text-danger">{errorList.cpc}</span>
-                    </FormGroup>
-                  </Col>
+                  
 
                   <Col size="12">
                     <ul className="align-center flex-wrap flex-sm-nowrap gx-4 gy-2">
                       <li>
                         <Button color="primary" size="md" type="submit">
-                          {editAdRateId > 0 ? "Update" : "Create"}
+                          Submit
                         </Button>
                       </li>
                     </ul>

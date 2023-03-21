@@ -65,12 +65,35 @@ const updateAdRate = async (data) => {
 
 // Manage Website
 
-const websiteList = async (website_category, website_status, pg, lim) => {
+const websiteList = async (website_category, website_status, pg, lim, src) => {
   const res = await api.post("/admin/pub/website/list", {
     website_category:website_category,
     website_status:website_status,
     page: pg,
     lim: lim,
+    src: src,
+  });
+  if (res.data.code === 105) {
+    sessionLogout();
+  } else {
+    return res.data;
+  }
+};
+
+const websiteReject = async (data) => {
+  const res = await api.post("/admin/pub/website/status/rejected", data);
+  //console.log(res.data);
+  if (res.data.code === 105) {
+    sessionLogout();
+  } else {
+    return res.data;
+  }
+};
+
+const websiteStatusUpdate = async (id, sts) => {
+  const res = await api.post("/admin/pub/website/status/update", {
+    id: id,
+    status: sts,
   });
   if (res.data.code === 105) {
     sessionLogout();
@@ -100,4 +123,6 @@ export {
   adRateStore,
   updateAdRate,
   websiteList,
+  websiteReject,
+  websiteStatusUpdate,
 };
