@@ -444,7 +444,7 @@ const getWebsiteList = () => {
                             </DataTableRow>
 
                             <DataTableRow size="lg">
-                              <span className={`badge badge-dim badge-dark`}>{item.website_category}</span>
+                              <span className={`badge badge-dim badge-dark`}>{item.category_name}</span>
                             </DataTableRow>
 
                             <DataTableRow size="lg">
