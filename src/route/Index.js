@@ -39,7 +39,7 @@ import PublisherUsersList from "../publisher/user/PublisherUsersList";
 import PublisherClientsList from "../publisher/user/PublisherClientsList";
 import AdRateList from "../publisher/ad-rates/AdRateList";
 import WebsiteList from "../publisher/website/WebsiteList";
-// import AdUnitList from "../publisher/ad-units/AdUnitList";
+import AdUnitList from "../publisher/ad-unit/AdUnitList";
 
 
 const Pages = () => {
@@ -121,7 +121,7 @@ const Pages = () => {
 
         <Route exact path={`${process.env.PUBLIC_URL}/ad-rates-list`} component={AdRateList}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/website-list`} component={WebsiteList}></Route>
-        {/* <Route exact path={`${process.env.PUBLIC_URL}/adunit-list`} component={AdUnitList}></Route> */}
+        <Route exact path={`${process.env.PUBLIC_URL}/adunit-list`} component={AdUnitList}></Route>
         
 
         <Route component={RedirectAs404}></Route>
