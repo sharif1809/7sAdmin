@@ -36,7 +36,7 @@ import { getCmpListCategoryList } from "../../app/api";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../../app/Loader";
-import { adRateStore, websiteList, websiteReject, websiteStatusUpdate } from "../../app/api2";
+import { adRateStore, adUnitList, websiteReject, websiteStatusUpdate } from "../../app/api2";
 import { useForm } from "react-hook-form";
 
 const AdUnitList = () => {
@@ -48,21 +48,21 @@ const AdUnitList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemPerPage] = useState(10);
 
-  const [status, setStatus] = useState("");
+  const [status, setAdType] = useState("");
 
-  const getUserStatus = () => {
+  const getAdType = () => {
     let usr = "";
-    if (status == "Unverified") {
+    if (adType == "Unverified") {
       usr = 1;
-    } else if (status == "Verified") {
+    } else if (adType == "Verified") {
       usr = 2;
-    } else if (status == "Hold") {
+    } else if (adType == "Hold") {
       usr = 3;
-    } else if (status == "Approved") {
+    } else if (adType == "Approved") {
       usr = 4;
-    } else if (status == "Suspended") {
+    } else if (adType == "Suspended") {
       usr = 5;
-    } else if (status == "Rejected") {
+    } else if (adType == "Rejected") {
       usr = 6;
     }
 
@@ -96,9 +96,9 @@ const AdUnitList = () => {
     setCategory(res);
   };
   
-  const getWebsiteList = async (cat, status, pg = 1, src = "") => {
+  const getWebsiteList = async (cat, adType, pg = 1, src = "") => {
     setLoading(true);
-    const res = await websiteList(cat, status, pg, itemPerPage, src);
+    const res = await adUnitList(cat, adType, pg, itemPerPage, src);
     // console.log(res.data);
     if (res.data) {
       // console.log(res.data);
@@ -182,7 +182,7 @@ const AdUnitList = () => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
     if (currentPage !== pageNumber) {
-      let std = getUserStatus();
+      let std = getAdType();
       getWebsiteList(cat, std, pageNumber);
     }
   };
@@ -296,7 +296,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  setStatus("All");
+                                  setAdType("All");
                                   getWebsiteList(cat);
                                 }}
                               >
@@ -311,7 +311,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   getWebsiteList(cat, 1);
-                                  setStatus("Unverified");
+                                  setAdType("Unverified");
                                 }}
                               >
                                 <span>Unverified</span>
@@ -324,7 +324,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   getWebsiteList(cat, 2);
-                                  setStatus("Verified");
+                                  setAdType("Verified");
                                 }}
                               >
                                 <span>Verified</span>
@@ -338,7 +338,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   getWebsiteList(cat, 3);
-                                  setStatus("Hold");
+                                  setAdType("Hold");
                                 }}
                               >
                                 <span>Hold</span>
@@ -351,7 +351,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   getWebsiteList(cat, 4);
-                                  setStatus("Approved");
+                                  setAdType("Approved");
                                 }}
                               >
                                 <span>Approved</span>
@@ -364,7 +364,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   getWebsiteList(cat, 5);
-                                  setStatus("Suspended");
+                                  setAdType("Suspended");
                                 }}
                               >
                                 <span>Suspended</span>
@@ -377,7 +377,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   getWebsiteList(cat, 6);
-                                  setStatus("Rejected");
+                                  setAdType("Rejected");
                                 }}
                               >
                                 <span>Rejected</span>

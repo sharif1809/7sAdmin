@@ -102,6 +102,23 @@ const websiteStatusUpdate = async (id, sts) => {
   }
 };
 
+// Manage AdUnit
+
+const adUnitList = async (website_category, ad_type, pg, lim, src) => {
+  const res = await api.post("/admin/pub/adunit/list", {
+    website_category:website_category,
+    ad_type:ad_type,
+    page: pg,
+    lim: lim,
+    src: src,
+  });
+  if (res.data.code === 105) {
+    sessionLogout();
+  } else {
+    return res.data;
+  }
+};
+
 
 const loginAsUserApi = async (uid) => {
   const res = await api.post("/admin/userlogin", {
@@ -125,4 +142,5 @@ export {
   websiteList,
   websiteReject,
   websiteStatusUpdate,
+  adUnitList,
 };
