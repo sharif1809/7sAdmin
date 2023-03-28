@@ -195,15 +195,15 @@ const AdUnitList = () => {
 
   return (
     <React.Fragment>
-      <Head title="Website List"></Head>
+      <Head title="Ad Unit List"></Head>
       <Content>
         <Loader visible={loading} />
         <BlockHead size="sm">
           <BlockBetween>
             <BlockHeadContent>
-              <BlockTitle>Website List</BlockTitle>
+              <BlockTitle>Ad Unit List</BlockTitle>
 
-              <BlockDes className="text-soft">You have total {pgs} Websites</BlockDes>
+              <BlockDes className="text-soft">You have total {pgs} Adunit</BlockDes>
             </BlockHeadContent>
             <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">
