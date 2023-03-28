@@ -403,16 +403,25 @@ const AdUnitList = () => {
                       <span className="sub-text">Publisher</span>
                     </DataTableRow>
                     <DataTableRow>
+                      <span className="sub-text">Ad Unit</span>
+                    </DataTableRow>
+                    <DataTableRow>
                       <span className="sub-text">Website</span>
+                    </DataTableRow>
+                    <DataTableRow>
+                      <span className="sub-text">Ad Type</span>
                     </DataTableRow>
                     <DataTableRow>
                       <span className="sub-text">Category</span>
                     </DataTableRow>
                     <DataTableRow size="lg">
-                      <span className="sub-text">Ad Units</span>
+                      <span className="sub-text">Status</span>
                     </DataTableRow>
                     <DataTableRow size="lg">
-                      <span className="sub-text">Status</span>
+                      <span className="sub-text">Total Impressions</span>
+                    </DataTableRow>
+                    <DataTableRow size="lg">
+                      <span className="sub-text">Total Clicks</span>
                     </DataTableRow>
 
                     <DataTableRow size="md">
@@ -436,6 +445,12 @@ const AdUnitList = () => {
                                 <span>{item.user_id}</span>
                               </div>
                             </DataTableRow>
+                            <DataTableRow>
+                              <div className="user-info">
+                                <span className="tb-lead">{item.ad_name} </span>
+                                <span>{item.ad_code}</span>
+                              </div>
+                            </DataTableRow>
                             <DataTableRow size="lg">
                               <a href={`${item.site_url}`} target="_blank">
                                 <span>{item.site_url}</span>
@@ -443,12 +458,12 @@ const AdUnitList = () => {
                             </DataTableRow>
 
                             <DataTableRow size="lg">
-                              <span className={`badge badge-dim badge-dark`}>{item.category_name}</span>
+                              <span className={`badge badge-dim badge-dark`}>{item.ad_type}</span>
+                            </DataTableRow>
+                            <DataTableRow size="lg">
+                              <span className={`badge badge-dim badge-dark`}>{item.category}</span>
                             </DataTableRow>
 
-                            <DataTableRow size="lg">
-                              <span className={`badge badge-dim badge-dark`}>{item.adunites}</span>
-                            </DataTableRow>
                             <DataTableRow size="md">
                               {item.website_status === 0 && (
                                 <span className={`badge badge-dim badge-info`}>
@@ -485,6 +500,14 @@ const AdUnitList = () => {
                                   <span>Rejected</span>
                                 </span>
                               )}
+                            </DataTableRow>
+
+                            <DataTableRow size="lg">
+                              <span className={`badge badge-dim badge-dark`}>{item.total_impressions}</span>
+                            </DataTableRow>
+                            
+                            <DataTableRow size="lg">
+                              <span className={`badge badge-dim badge-dark`}>{item.total_clicks}</span>
                             </DataTableRow>
                             <DataTableRow size="lg">
                               <span>{item.create_date}</span>
