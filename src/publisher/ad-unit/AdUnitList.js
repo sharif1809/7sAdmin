@@ -48,25 +48,24 @@ const AdUnitList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemPerPage] = useState(10);
 
-  const [status, setAdType] = useState("");
+  const [adType, setAdType] = useState("");
 
   const getAdType = () => {
-    let usr = "";
-    if (adType == "Unverified") {
-      usr = 1;
-    } else if (adType == "Verified") {
-      usr = 2;
-    } else if (adType == "Hold") {
-      usr = 3;
-    } else if (adType == "Approved") {
-      usr = 4;
-    } else if (adType == "Suspended") {
-      usr = 5;
-    } else if (adType == "Rejected") {
-      usr = 6;
+    let adt = "";
+    if (adType == "Text Ads") {
+      adt = "text";
+    } else if (adType == "Banner Ads") {
+      adt = "banner";
+    } else if (adType == "Video Ads") {
+      adt = "video";
+    } else if (adType == "Social Ads") {
+      adt = "social";
+    } else if (adType == "Native Ads") {
+      adt = "native";
+    } else if (adType == "Popunder Ads") {
+      adt = "popup";
     }
-
-    return usr;
+    return adt;
   };
 
   const [categlist, setCategory] = useState(null);
@@ -96,7 +95,7 @@ const AdUnitList = () => {
     setCategory(res);
   };
   
-  const getWebsiteList = async (cat, adType, pg = 1, src = "") => {
+  const getAdUnitList = async (cat, adType, pg = 1, src = "") => {
     setLoading(true);
     const res = await adUnitList(cat, adType, pg, itemPerPage, src);
     // console.log(res.data);
@@ -115,12 +114,12 @@ const AdUnitList = () => {
     setLoading(true);
     const res = await websiteStatusUpdate(id, sts);
     if (res.code === 200) {
-      getWebsiteList();
+      getAdUnitList();
     }
     setLoading(false);
   };
   const onFilterChange = (val) => {
-    getWebsiteList("", "", "", val);
+    getAdUnitList("", "", "", val);
   };
   const [modal, setModal] = useState(false);
   const reload = () => window.location.reload();
@@ -153,7 +152,7 @@ const AdUnitList = () => {
           draggable: true,
           progress: false,
         });
-        getWebsiteList();
+        getAdUnitList();
         setLoading(false);
         setModal(false);
         resetForm();
@@ -174,7 +173,7 @@ const AdUnitList = () => {
       }
     
 
-    getWebsiteList();
+    getAdUnitList();
     setLoading(false);
   };
 
@@ -182,12 +181,12 @@ const AdUnitList = () => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
     if (currentPage !== pageNumber) {
-      let std = getAdType();
-      getWebsiteList(cat, std, pageNumber);
+      let adt = getAdType();
+      getAdUnitList(cat, adt, pageNumber);
     }
   };
   useEffect(() => {
-    getWebsiteList();
+    getAdUnitList();
     getCategory();
    
   }, []);
@@ -250,7 +249,7 @@ const AdUnitList = () => {
                                   ev.preventDefault();
                                   setCat(null);
                                   setCatName("All");
-                                  getWebsiteList("");
+                                  getAdUnitList("");
                                 }}
                               >
                                 <span>All</span>
@@ -267,7 +266,7 @@ const AdUnitList = () => {
                                           ev.preventDefault();
                                           setCat(item.value);
                                           setCatName(item.label);
-                                          getWebsiteList(item.value);
+                                          getAdUnitList(item.value);
                                         }}
                                         defaultValue={{ label: "test", value: cat }}
                                       >
@@ -285,7 +284,7 @@ const AdUnitList = () => {
                       <UncontrolledDropdown>
                         <DropdownToggle tag="a" className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
                           <Icon name="filter-alt" className="d-none d-sm-inline"></Icon>
-                          <span>Filtered By {status} Status</span>
+                          <span>Filtered By {status} Ad type</span>
                           <Icon name="chevron-right" className="dd-indc"></Icon>
                         </DropdownToggle>
                         <DropdownMenu right>
@@ -297,7 +296,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   setAdType("All");
-                                  getWebsiteList(cat);
+                                  getAdUnitList(cat);
                                 }}
                               >
                                 <span>All</span>
@@ -310,7 +309,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, 1);
+                                  getAdUnitList(cat, 1);
                                   setAdType("Unverified");
                                 }}
                               >
@@ -323,7 +322,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, 2);
+                                  getAdUnitList(cat, 2);
                                   setAdType("Verified");
                                 }}
                               >
@@ -337,7 +336,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, 3);
+                                  getAdUnitList(cat, 3);
                                   setAdType("Hold");
                                 }}
                               >
@@ -350,7 +349,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, 4);
+                                  getAdUnitList(cat, 4);
                                   setAdType("Approved");
                                 }}
                               >
@@ -363,7 +362,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, 5);
+                                  getAdUnitList(cat, 5);
                                   setAdType("Suspended");
                                 }}
                               >
@@ -376,7 +375,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, 6);
+                                  getAdUnitList(cat, 6);
                                   setAdType("Rejected");
                                 }}
                               >
