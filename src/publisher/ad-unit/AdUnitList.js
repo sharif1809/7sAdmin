@@ -225,7 +225,7 @@ const AdUnitList = () => {
                           type="text"
                           className="form-control"
                           id="default-04"
-                          placeholder="Search Website, User ID & Email ID, Category"
+                          placeholder="Search Unit Name, Unit ID, ,Website Url, User ID & Email ID, Category"
                           onChange={(e) => {
                             onFilterChange(e.target.value);
                           }}
@@ -284,11 +284,11 @@ const AdUnitList = () => {
                       <UncontrolledDropdown>
                         <DropdownToggle tag="a" className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
                           <Icon name="filter-alt" className="d-none d-sm-inline"></Icon>
-                          <span>Filtered By {status} Ad type</span>
+                          <span>Filtered By {adType.charAt(0).toUpperCase() + adType.slice(1)} Ads</span>
                           <Icon name="chevron-right" className="dd-indc"></Icon>
                         </DropdownToggle>
                         <DropdownMenu right>
-                          <ul className="link-list-opt no-bdr" style={{ height: "300px", "overflow-y": "scroll" }}>
+                          {/* <ul className="link-list-opt no-bdr" style={{ height: "300px", "overflow-y": "scroll" }}>
                             <li>
                               <DropdownItem
                                 tag="a"
@@ -382,6 +382,136 @@ const AdUnitList = () => {
                                 <span>Rejected</span>
                               </DropdownItem>
                             </li>
+                          </ul> */}
+                          <ul className="link-list-opt no-bdr">
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  setAdType("All");
+                                  getAdUnitList(cat);
+                                }}
+                                
+                              >
+                                <span>All</span>
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getAdUnitList(cat, "text");
+                                  setAdType("text");
+                                }}
+                              >
+                                <span>Text Ads</span>
+                                {adType === "Text Ads" && (
+                                  <Icon
+                                    name="check"
+                                    style={{ position: "absolute", right: "10px", fontSize: "14px" }}
+                                  />
+                                )}
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getAdUnitList(cat, "banner");
+                                  setAdType("banner");
+                                }}
+                              >
+                                <span>Banner Ads</span>
+                                {adType === "Banner Ads" && (
+                                  <Icon
+                                    name="check"
+                                    style={{ position: "absolute", right: "10px", fontSize: "14px" }}
+                                  />
+                                )}
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getAdUnitList(cat, "video");
+                                  setAdType("video");
+                                }}
+                              >
+                                <span>Video Ads</span>
+                                {adType === "video" && (
+                                  <Icon
+                                    name="check"
+                                    style={{ position: "absolute", right: "10px", fontSize: "14px" }}
+                                  />
+                                )}
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getAdUnitList(cat, "social");
+                                  setAdType("social");
+                                }}
+                              >
+                                <span>Social Ads</span>
+                                {adType === "social" && (
+                                  <Icon
+                                    name="check"
+                                    style={{ position: "absolute", right: "10px", fontSize: "14px" }}
+                                  />
+                                )}
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getAdUnitList(cat, "native");
+                                  setAdType("native");
+                                }}
+                              >
+                                <span>Native Ads </span>
+                                {adType === "native" && (
+                                  <Icon
+                                    name="check"
+                                    style={{ position: "absolute", right: "10px", fontSize: "14px" }}
+                                  />
+                                )}
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getAdUnitList(cat, "popup");
+                                  setAdType("popup");
+                                }}
+                              >
+                                <span>Popunder Ads</span>
+                                {adType === "popup" && (
+                                  <Icon
+                                    name="check"
+                                    style={{ position: "absolute", right: "10px", fontSize: "14px" }}
+                                  />
+                                )}
+                              </DropdownItem>
+                            </li>
                           </ul>
                         </DropdownMenu>
                       </UncontrolledDropdown>
@@ -465,41 +595,27 @@ const AdUnitList = () => {
                             </DataTableRow>
 
                             <DataTableRow size="md">
-                              {item.website_status === 0 && (
+                              {item.status === 1 && (
                                 <span className={`badge badge-dim badge-info`}>
-                                  <span>Incomplete</span>
+                                  <span>Inreview</span>
                                 </span>
                               )}
-                              {item.website_status === 1 && (
+                              {item.status === 2 && (
                                 <span className={`badge badge-dim badge-primary`}>
-                                  <span>Unverified</span>
+                                  <span>Active</span>
                                 </span>
                               )}
-                              {item.website_status === 2 && (
+                              {item.status === 3 && (
                                 <span className={`badge badge-dim badge-warning`}>
-                                  <span>Verified</span>
-                                </span>
-                              )}
-                              {item.website_status === 3 && (
-                                <span className={`badge badge-dim badge-dark`}>
                                   <span>Hold</span>
                                 </span>
                               )}
-                              {item.website_status === 4 && (
-                                <span className={`badge badge-dim badge-success`}>
-                                  <span>Approved</span>
-                                </span>
-                              )}
-                              {item.website_status === 5 && (
-                                <span className={`badge badge-dim badge-warning`}>
+                              {item.status === 4 && (
+                                <span className={`badge badge-dim badge-dark`}>
                                   <span>Suspended</span>
                                 </span>
                               )}
-                              {item.website_status === 6 && (
-                                <span className={`badge badge-dim badge-danger`}>
-                                  <span>Rejected</span>
-                                </span>
-                              )}
+                              
                             </DataTableRow>
 
                             <DataTableRow size="lg">
