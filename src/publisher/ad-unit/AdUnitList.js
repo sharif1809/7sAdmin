@@ -110,7 +110,7 @@ const AdUnitList = () => {
     setLoading(false);
   };
 
-  const updateWebsite = async (id, sts) => {
+  const updateAdUnit = async (id, sts) => {
     setLoading(true);
     const res = await websiteStatusUpdate(id, sts);
     if (res.code === 200) {
@@ -597,7 +597,7 @@ const AdUnitList = () => {
                             <DataTableRow size="md">
                               {item.status === 1 && (
                                 <span className={`badge badge-dim badge-info`}>
-                                  <span>Inreview</span>
+                                  <span>Inactive</span>
                                 </span>
                               )}
                               {item.status === 2 && (
@@ -644,60 +644,21 @@ const AdUnitList = () => {
                                     <DropdownMenu right>
                                       <ul className="link-list-opt no-bdr">
                                         <li>
-                                          {item.website_status === 4 ? (
+                                          {item.status === 1 ? (
                                             <li>
                                               <DropdownItem
                                                 tag="a"
                                                 href="#markasdone"
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  updateWebsite(item.id, 1);
+                                                  updateAdUnit(item.id, 2);
                                                 }}
                                               >
-                                                <Icon name="icon ni ni-property-remove"></Icon>
-                                                <span>Unverified</span>
+                                                <Icon name="play"></Icon>
+                                                <span>Active</span>
                                               </DropdownItem>
 
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  updateWebsite(item.id, 3);
-                                                }}
-                                              >
-                                                <Icon name="icon ni ni-eye"></Icon>
-                                                <span>Hold</span>
-                                              </DropdownItem>
 
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  updateWebsite(item.id, 5);
-                                                }}
-                                              >
-                                                <Icon name="pause"></Icon>
-                                                <span>Suspend</span>
-                                              </DropdownItem>
-                                              <DropdownItem
-                                                tag="a"
-                                                href="#markasdone"
-                                                // onClick={(ev) => {
-                                                //   ev.preventDefault();
-                                                //   // updateWebsite(item.id, 6);
-                                                // }}
-                                                onClick={(ev) => {
-                                                  ev.preventDefault();
-                                                  setFormData({ ...formData, id: item.id });
-                                                  console.log(formData)
-                                                  setModal({ add: true });
-                                                }}
-                                              >
-                                                <Icon name="icon ni ni-alert-circle-fill"></Icon>
-                                                <span>Reject</span>
-                                              </DropdownItem>
                                               
                                             </li>
                                           ) : (
@@ -707,11 +668,11 @@ const AdUnitList = () => {
                                                 href="#markasdone"
                                                 onClick={(ev) => {
                                                   ev.preventDefault();
-                                                  updateWebsite(item.id, 4);
+                                                  updateAdUnit(item.id, 1);
                                                 }}
                                               >
-                                                <Icon name="play"></Icon>
-                                                <span>Approve</span>
+                                                <Icon name="icon ni ni-alert-circle-fill"></Icon>
+                                                <span>Inactive</span>
                                               </DropdownItem>
                                             </li>
                                           )}
