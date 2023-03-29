@@ -36,7 +36,7 @@ import { getCmpListCategoryList } from "../../app/api";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../../app/Loader";
-import { adRateStore, adUnitList, websiteReject, websiteStatusUpdate } from "../../app/api2";
+import { adRateStore, adUnitList, updateAdUnitStatus, websiteReject, websiteStatusUpdate } from "../../app/api2";
 import { useForm } from "react-hook-form";
 
 const AdUnitList = () => {
@@ -112,7 +112,7 @@ const AdUnitList = () => {
 
   const updateAdUnit = async (id, sts) => {
     setLoading(true);
-    const res = await websiteStatusUpdate(id, sts);
+    const res = await updateAdUnitStatus(id, sts);
     if (res.code === 200) {
       getAdUnitList();
     }

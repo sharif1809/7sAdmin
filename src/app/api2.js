@@ -119,6 +119,18 @@ const adUnitList = async (website_category, ad_type, pg, lim, src) => {
   }
 };
 
+const updateAdUnitStatus = async (id, sts) => {
+  const res = await api.post("/admin/pub/adunit/update", {
+    ud: id,
+    status: sts,
+  });
+  if (res.data.code === 105) {
+    sessionLogout();
+  } else {
+    return res.data;
+  }
+};
+
 
 const loginAsUserApi = async (uid) => {
   const res = await api.post("/admin/userlogin", {
@@ -143,4 +155,5 @@ export {
   websiteReject,
   websiteStatusUpdate,
   adUnitList,
+  updateAdUnitStatus,
 };
