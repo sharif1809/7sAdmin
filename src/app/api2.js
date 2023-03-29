@@ -121,7 +121,7 @@ const adUnitList = async (website_category, ad_type, pg, lim, src) => {
 
 const updateAdUnitStatus = async (id, sts) => {
   const res = await api.post("/admin/pub/adunit/update", {
-    ud: id,
+    id: id,
     status: sts,
   });
   if (res.data.code === 105) {
