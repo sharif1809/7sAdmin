@@ -104,10 +104,11 @@ const websiteStatusUpdate = async (id, sts) => {
 
 // Manage AdUnit
 
-const adUnitList = async (website_category, ad_type, pg, lim, src) => {
+const adUnitList = async (website_category, ad_type, status, pg, lim, src) => {
   const res = await api.post("/admin/pub/adunit/list", {
     website_category:website_category,
     ad_type:ad_type,
+    status:status,
     page: pg,
     lim: lim,
     src: src,

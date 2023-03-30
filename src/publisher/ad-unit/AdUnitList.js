@@ -68,26 +68,25 @@ const AdUnitList = () => {
     return adt;
   };
 
+  const [status, setStatus] = useState("");
+
+  const getUserStatus = () => {
+    let usr = "";
+    if (status == "Inactive") {
+      usr = 1;
+    } else if (status == "Active") {
+      usr = 2;
+    }
+    return usr;
+  };
+
   const [categlist, setCategory] = useState(null);
 
   const [cat, setCat] = useState(null);
   const [catName, setCatName] = useState(null);
   const [errorList, setError] = useState([]);
   const [webId, setWebId] = useState(0);
-  const [formData, setFormData] = useState({
-    remark: "",
-    status: 6,
-    id: "",
-    errorList: [],
-  });
-  const resetForm = () => {
-    setFormData({
-      remark: "",
-      status: 6,
-      id: "",
-      errorList: [],
-    });
-  };
+  
 
   const getCategory = async () => {
     const res = await getCmpListCategoryList();
@@ -95,9 +94,9 @@ const AdUnitList = () => {
     setCategory(res);
   };
   
-  const getAdUnitList = async (cat, adType, pg = 1, src = "") => {
+  const getAdUnitList = async (cat, adType, status, pg = 1, src = "") => {
     setLoading(true);
-    const res = await adUnitList(cat, adType, pg, itemPerPage, src);
+    const res = await adUnitList(cat, adType, status, pg, itemPerPage, src);
     // console.log(res.data);
     if (res.data) {
       // console.log(res.data);
@@ -121,68 +120,20 @@ const AdUnitList = () => {
   const onFilterChange = (val) => {
     getAdUnitList("", "", "", val);
   };
-  const [modal, setModal] = useState(false);
-  const reload = () => window.location.reload();
-  // function to close the form modal
-  const onFormCancel = () => {
-    setModal({ edit: false, add: false });
-    reload();
-    resetForm();
-  };
-
+  
   // OnChange function to get the input data
   const onInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // submit function to add a new item
-  const onFormSubmit = async () => {
-    // console.log(formData);
-    setLoading(true);
-    
-      const res = await websiteReject(formData);
-      // console.log(res);
-      if (res.code === 200) {
-        toast.success("Rate Added Successfully", {
-          position: "top-right",
-          autoClose: true,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: false,
-        });
-        getAdUnitList();
-        setLoading(false);
-        setModal(false);
-        resetForm();
-      } else if (res.code === 100) {
-        setModal(true);
-        setError(res.error);
-        // console.log(res.error);
-      } else {
-        toast.error("Something went wrong!", {
-          position: "top-right",
-          autoClose: true,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: false,
-        });
-      }
-    
-
-    getAdUnitList();
-    setLoading(false);
-  };
-
+  
   // Change Page
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
     if (currentPage !== pageNumber) {
       let adt = getAdType();
-      getAdUnitList(cat, adt, pageNumber);
+      let std = getUserStatus();
+      getAdUnitList(cat, adt, std, pageNumber);
     }
   };
   useEffect(() => {
@@ -516,6 +467,61 @@ const AdUnitList = () => {
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </li>
+                    <li>
+                      <UncontrolledDropdown>
+                        <DropdownToggle tag="a" className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
+                          <Icon name="filter-alt" className="d-none d-sm-inline"></Icon>
+                          <span>Filtered By {status} Status</span>
+                          <Icon name="chevron-right" className="dd-indc"></Icon>
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                          <ul className="link-list-opt no-bdr" style={{ height: "300px", "overflow-y": "scroll" }}>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  setStatus("All");
+                                  getWebsiteList(cat, adType);
+                                }}
+                              >
+                                <span>All</span>
+                              </DropdownItem>
+                            </li>
+
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getWebsiteList(cat, adType, 1);
+                                  setStatus("Inactive");
+                                }}
+                              >
+                                <span>Inactive</span>
+                              </DropdownItem>
+                            </li>
+                            <li>
+                              <DropdownItem
+                                tag="a"
+                                href="#dropdownitem"
+                                onClick={(ev) => {
+                                  ev.preventDefault();
+                                  getWebsiteList(cat, adType, 2);
+                                  setStatus("Active");
+                                }}
+                              >
+                                <span>Active</span>
+                              </DropdownItem>
+                            </li>
+
+                            
+                          </ul>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    </li>
                     
                   </ul>
                 </div>
@@ -707,55 +713,7 @@ const AdUnitList = () => {
           </Card>
         </Block>
 
-        <Modal isOpen={modal} toggle={() => setModal(false)} className="modal-dialog-centered" size="md">
-          <ModalBody>
-            <a
-              href="#cancel"
-              onClick={(ev) => {
-                ev.preventDefault();
-                onFormCancel();
-                setModal(false);
-              }}
-              className="close"
-            >
-              <Icon name="cross-sm"></Icon>
-            </a>
-            <div className="p-2">
-              <h5 className="title">Add Remark for Rejection</h5>
-              <div className="mt-4">
-                <Form className="row gy-4" onSubmit={handleSubmit(onFormSubmit)}>
-                  
-                   
-                  <Col md="12">
-                    <FormGroup>
-                      <label className="form-label">Remark</label>
-                      <input
-                        type="text"
-                        name="remark"
-                        placeholder="Enter Remark"
-                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
-                        className="form-control"
-                        ref={register({})}
-                      />
-                      <span className="text-danger">{errorList.remark}</span>
-                    </FormGroup>
-                  </Col>
-                  
-
-                  <Col size="12">
-                    <ul className="align-center flex-wrap flex-sm-nowrap gx-4 gy-2">
-                      <li>
-                        <Button color="primary" size="md" type="submit">
-                          Submit
-                        </Button>
-                      </li>
-                    </ul>
-                  </Col>
-                </Form>
-              </div>
-            </div>
-          </ModalBody>
-        </Modal>
+        
         <ToastContainer />
       </Content>
     </React.Fragment>
