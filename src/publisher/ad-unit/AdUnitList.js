@@ -483,7 +483,7 @@ const AdUnitList = () => {
                                 onClick={(ev) => {
                                   ev.preventDefault();
                                   setStatus("All");
-                                  getWebsiteList(cat, adType);
+                                  getAdUnitList(cat, adType);
                                 }}
                               >
                                 <span>All</span>
@@ -496,7 +496,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, adType, 1);
+                                  getAdUnitList(cat, adType, 1);
                                   setStatus("Inactive");
                                 }}
                               >
@@ -509,7 +509,7 @@ const AdUnitList = () => {
                                 href="#dropdownitem"
                                 onClick={(ev) => {
                                   ev.preventDefault();
-                                  getWebsiteList(cat, adType, 2);
+                                  getAdUnitList(cat, adType, 2);
                                   setStatus("Active");
                                 }}
                               >
